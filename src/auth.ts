@@ -63,15 +63,23 @@ export function getBearerToken(req: Request) {
     throw new UserNotAuthorizedError("Invalid authorization header");
   }
 
-  return extractBearerToken(authHeader);
+  return extractToken(authHeader, "Bearer");
 }
 
-function extractBearerToken(header: string) {
+function extractToken(header: string, startWith: string) {
   const splitAuth = header.split(" ");
-  if (splitAuth.length < 2 || splitAuth[0] !== "Bearer") {
+  if (splitAuth.length < 2 || splitAuth[0] !== startWith) {
     throw new BadRequestError("Invalid authorization header");
   }
   return splitAuth[1];
+}
+
+export function getAPIKey(req: Request) {
+  const authHeader = req.get("Authorization");
+  if (!authHeader) {
+    throw new UserNotAuthorizedError("Invalid authorization header");
+  }
+  return extractToken(authHeader, "ApiKey");
 }
 
 export function makeRefreshToken(): string {
