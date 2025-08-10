@@ -12,8 +12,9 @@ import {
   handlerCreateChirp,
   handlerGetAllChirps,
   handlerChirpsGet,
+  handlerChirpsDelete,
 } from "./api/chirps.js";
-
+import { handlerPolkaWebhooks } from "./api/polka.js";
 import { middlewareLogResponses } from "./middleware/log_responses.js";
 import { middlewareMetricsInc } from "./middleware/metrics.js";
 import { middlewareErrorHandler } from "./middleware/error_handler.js";
@@ -41,6 +42,9 @@ app.put("/api/users", handlerUpdateUser);
 app.post("/api/chirps", handlerCreateChirp);
 app.get("/api/chirps", handlerGetAllChirps);
 app.get("/api/chirps/:chirpId", handlerChirpsGet);
+app.delete("/api/chirps/:chirpId", handlerChirpsDelete);
+
+app.post("/api/polka/webhooks", handlerPolkaWebhooks);
 
 app.get("/admin/metrics", handlerMetrics);
 app.post("/admin/reset", handlerReset);

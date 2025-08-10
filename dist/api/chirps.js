@@ -1,5 +1,5 @@
-import { BadRequestError, NotFoundError } from "../errors.js";
-import { createChirp, getAllChirps, getChirpById, } from "../db/queries/chirps.js";
+import { BadRequestError, NotFoundError, UserForbiddenError, } from "../errors.js";
+import { createChirp, getAllChirps, getChirpById, deleteChirp, } from "../db/queries/chirps.js";
 import { respondWithJSON } from "../json.js";
 import { getBearerToken, validateJWT } from "../auth.js";
 import { config } from "../config.js";
@@ -52,4 +52,18 @@ function getCleanedBody(body, badWords) {
     }
     const cleaned = words.join(" ");
     return cleaned;
+}
+export async function handlerChirpsDelete(req, res) {
+    const chirpId = req.params.chirpId;
+    const chirp = await getChirpById(chirpId);
+    if (!chirp) {
+        throw new NotFoundError(`Chirp with ID ${chirpId} not found`);
+    }
+    const token = getBearerToken(req);
+    const userId = validateJWT(token, config.api.jwtSecret);
+    if (chirp.userId !== userId) {
+        throw new UserForbiddenError("Unauthorized");
+    }
+    await deleteChirp(chirpId);
+    res.status(204).send();
 }

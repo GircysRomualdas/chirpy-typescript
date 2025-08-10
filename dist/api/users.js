@@ -18,6 +18,7 @@ export async function handlerCreateUser(req, res) {
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
         email: user.email,
+        isChirpyRed: user.isChirpyRed,
     });
 }
 export async function handlerUpdateUser(req, res) {
@@ -39,5 +40,6 @@ export async function handlerUpdateUser(req, res) {
         createdAt: updatedUser.createdAt,
         updatedAt: updatedUser.updatedAt,
         email: updatedUser.email,
+        isChirpyRed: user.isChirpyRed,
     });
 }
